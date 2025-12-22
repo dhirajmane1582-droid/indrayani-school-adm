@@ -135,6 +135,17 @@ export const AdmissionForm: React.FC = () => {
       return;
     }
 
+    // Sanitize Annual Income: Allow numbers, dots, and commas only
+    if (name === 'annualIncome') {
+      const sanitized = value.replace(/[^0-9.,]/g, '');
+      setFormData(prev => ({ ...prev, [name]: sanitized }));
+      
+      if (errors[name as keyof AdmissionData]) {
+         setErrors(prev => ({ ...prev, [name]: '' }));
+      }
+      return;
+    }
+
     // Sanitize Name Fields: Allow only letters, spaces, and dots
     if (['fullName', 'fatherName', 'motherName', 'emgName'].includes(name)) {
       const sanitized = value.replace(/[^a-zA-Z\s.]/g, '');
