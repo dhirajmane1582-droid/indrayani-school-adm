@@ -26,6 +26,9 @@ export const AdmissionForm: React.FC = () => {
   const [showDraftsModal, setShowDraftsModal] = useState(false);
   const [savedDrafts, setSavedDrafts] = useState<string[]>([]);
   
+  // Get today's date in YYYY-MM-DD format for max date restriction
+  const today = new Date().toISOString().split('T')[0];
+
   // Tooltip states and refs
   const [showBirthHelp, setShowBirthHelp] = useState(false);
   const [showDobHelp, setShowDobHelp] = useState(false);
@@ -94,9 +97,11 @@ export const AdmissionForm: React.FC = () => {
 
     // DOB validation
     if (name === 'dob' && value) {
-       const date = new Date(value);
+       const selectedDate = new Date(value);
        const now = new Date();
-       if (date > now) {
+       // Reset time for accurate date comparison
+       now.setHours(0, 0, 0, 0);
+       if (selectedDate > now) {
            return 'Date of birth cannot be in the future';
        }
     }
@@ -635,6 +640,7 @@ export const AdmissionForm: React.FC = () => {
                     value={formData.dob} 
                     onChange={handleInputChange} 
                     onBlur={handleBlur}
+                    max={today}
                     className={getInputClass('dob')}
                     required 
                   />
